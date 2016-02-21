@@ -1,0 +1,24 @@
+{
+    "name": "sean/portphotio",
+    "description": "lightweight library for handling small photo collections with json.",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Sean Thayer",
+            "email": "seanmft.dev@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=5.4.0",
+        "ext-gd": "*",
+        "intervention/image" : "*",
+        "sean/upload": ">=1.0"
+    },
+    "autoload": {
+        "psr-0": {
+            "Portphotio": "src/"
+        }
+    }
+}
