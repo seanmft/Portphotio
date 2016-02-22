@@ -46,7 +46,11 @@ class Entry implements JsonSerializable
     public function setAttribute($name, $value){
         if( array_key_exists($name, $this->values)){
             $this->values[$name] = $value;
-        }else{
+        }
+        elseif( isset($this->values['attrs'][$name]) && null === $value ){
+            unset($this->values['attrs'][$name]);
+        }
+        else{
             $this->values['attrs'][$name] = $value;
         }
     }
