@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "93297dcc0693ea415ec8ef994f20b7a6",
-    "content-hash": "8b1a0e1f706b55762582af48dc5fab12",
+    "hash": "b3c67917b53d9df340163076f611b9b4",
+    "content-hash": "633a492b034a8d3b5aa456599a554cf1",
     "packages": [
         {
             "name": "guzzlehttp/psr7",
@@ -175,42 +175,6 @@
                 "response"
             ],
             "time": "2015-05-04 20:22:00"
-        },
-        {
-            "name": "sean/upload",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/seanmft/Upload.git",
-                "reference": "be195a1250e116b81b4529558f5fa1f15597912d"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/seanmft/Upload/zipball/be195a1250e116b81b4529558f5fa1f15597912d",
-                "reference": "be195a1250e116b81b4529558f5fa1f15597912d",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.4.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "Upload": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Sean Thayer",
-                    "email": "seanmft.dev@gmail.com"
-                }
-            ],
-            "description": "class suite to create a predictable file upload interface",
-            "time": "2016-02-21 20:55:30"
         }
     ],
     "packages-dev": [],
