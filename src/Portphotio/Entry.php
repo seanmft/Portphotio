@@ -42,6 +42,7 @@ class Entry implements JsonSerializable
     }
 
     public function setAttribute($name, $value){
+        $name = $this->_errorCheckAndSanitizeAttributeNames($name);
         //when attribute values are set to null we just unset them
         if( isset($this->values['attrs'][$name]) && null === $value ){
             unset($this->values['attrs'][$name]);
@@ -49,6 +50,17 @@ class Entry implements JsonSerializable
         else{
             $this->values['attrs'][$name] = $value;
         }
+    }
+
+    protected function _errorCheckAndSanitizeAttributeNames($name){
+        $name = strtolower(trim($name));
+        $name = trim(str_replace([' ','_'], '-', $name), '-');
+        if( !preg_match('/^[-a-z0-9\.]*[a-z0-9]$/', $name) ){
+            throw new RuntimeException(
+                'The attribute name '.$name.' is not valid. Use a-z, 0-9, period "." and/or hyphen "-" (between words only), with a minimum length of one characetr'
+            );
+        }
+        return $name;
     }
 
     public function replaceAttributes(array $attributes){
