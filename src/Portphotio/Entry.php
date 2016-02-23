@@ -23,11 +23,9 @@ class Entry implements JsonSerializable
 
         $this->values = [
             'uuid' => $this->uuid,
-            'name' => '',
+            'name' => $this->uuid,
             'href' => $this->baseUrl .'/'. $this->uuid,
-            'attrs' => [
-
-            ]
+            'attrs' => []
         ];
     }
 
@@ -44,10 +42,8 @@ class Entry implements JsonSerializable
     }
 
     public function setAttribute($name, $value){
-        if( array_key_exists($name, $this->values)){
-            $this->values[$name] = $value;
-        }
-        elseif( isset($this->values['attrs'][$name]) && null === $value ){
+        //when attribute values are set to null we just unset them
+        if( isset($this->values['attrs'][$name]) && null === $value ){
             unset($this->values['attrs'][$name]);
         }
         else{
@@ -57,6 +53,31 @@ class Entry implements JsonSerializable
 
     public function replaceAttributes(array $attributes){
         $this->values['attrs'] = $attributes;
+    }
+
+    public function issetAttribute($name){
+        return isset($this->values['attrs'][$name]);
+    }
+
+    public function getName(){
+        return $this->values['name'];
+    }
+
+    public function getHref(){
+        return $this->values['href'];
+    }
+
+    public function getAttribute($name){
+        if( isset($this->values['attrs'][$name]) ){
+            return $this->values['attrs'][$name];
+        }
+        return null;
+    }
+
+    public function getProperty($name){
+        if( isset($this->values[$name]) ){
+            $this->values[$name];
+        }
     }
 
     public function getUUID(){

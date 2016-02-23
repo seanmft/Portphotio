@@ -7,6 +7,7 @@ class ManifestTest extends \PHPUnit_Framework_TestCase
     protected
         $fixturesPath,
         $files,
+        $fileNames,
         $baseUrl,
         $fileStorageDir;
 
@@ -16,8 +17,10 @@ class ManifestTest extends \PHPUnit_Framework_TestCase
         foreach(new \FilesystemIterator($this->fixturesPath .'/test-files') as $finfo){
             if($finfo->isFile()){
                 $this->files[] = $finfo->getPathName();
+                $this->fileNames[] = $finfo->getFileName();
             }
         }
+
         $this->baseUrl = 'http://www.fakeurl.com';
         $this->fileStorageDir = $this->fixturesPath . '/img';
     }
@@ -85,12 +88,12 @@ class ManifestTest extends \PHPUnit_Framework_TestCase
     public function testJsonSerialize(){
         $m = $this->testGoodConstruct();
         $expectedUuid = hash_file('fnv164', $this->files[5]);
-        $uuid = $m->saveFile($this->files[5]);
+        $uuid = $m->saveFile($this->files[5], $this->fileNames[5]);
 
         $expectedArray = [
             $expectedUuid => [
                 'uuid' => $expectedUuid,
-                'name' => '',
+                'name' => $this->fileNames[5],
                 'href' => $this->baseUrl .'/'. $expectedUuid,
                 'attrs' => []
             ]

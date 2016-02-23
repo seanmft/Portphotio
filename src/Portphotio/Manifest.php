@@ -57,8 +57,11 @@ class Manifest implements JsonSerializable,Iterator
         return (isset($this->entries[$uuid]))? $this->entries[$uuid] : null;
     }
 
-    public function saveFile($filePath){
+    public function saveFile($filePath, $fileName = null){
         $e = new Entry($filePath, $this->baseUrl);
+        if( null !== $fileName){
+            $e->setName($fileName);
+        }
         $uuid = $e->getUUID();
         $e->moveFile($this->fileStorageDir);
         $this->entries[$uuid] = $e;
