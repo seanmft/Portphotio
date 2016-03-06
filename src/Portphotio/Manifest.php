@@ -56,6 +56,32 @@ class Manifest implements JsonSerializable,Iterator
     public function getEntry($uuid){
         return (isset($this->entries[$uuid]))? $this->entries[$uuid] : null;
     }
+    
+//--new->
+    public function getEntries($propOrAttrName, $value = null){
+        $entries = [];
+        $propOrAttrName = strtolower($propOrAttrName);
+        $value = null===$value? $value : strtolower($value);
+        foreach ($this->entries as $uuid => $entry) {
+            if(in_array($propOrAttrName, ['uuid','name','href'])){
+                if(strtolower($entry->getProperty($propOrAttrName)) == $value){
+                    $entries[] = $entry;
+                }
+                elseif($value === null){
+                    $entries[] = $entry;
+                }
+            }
+            elseif($entry->issetAttribute($propOrAttrName)){
+                if(strtolower($entry->getAttribute($propOrAttrName)) == $value){
+                    $entries[] = $entry;
+                }
+                elseif($value === null) {
+                    $entries[] = $entry;
+                }
+            }
+        }
+        return $entries;
+    }
 
     public function saveFile($filePath, $fileName = null){
         $e = new Entry($filePath, $this->baseUrl);

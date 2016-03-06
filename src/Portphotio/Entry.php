@@ -88,7 +88,7 @@ class Entry implements JsonSerializable
 
     public function getProperty($name){
         if( isset($this->values[$name]) ){
-            $this->values[$name];
+            return $this->values[$name];
         }
     }
 
