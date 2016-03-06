@@ -56,7 +56,7 @@ class Manifest implements JsonSerializable,Iterator
     public function getEntry($uuid){
         return (isset($this->entries[$uuid]))? $this->entries[$uuid] : null;
     }
-    
+
 //--new->
     public function getEntries($propOrAttrName, $value = null){
         $entries = [];
@@ -92,6 +92,29 @@ class Manifest implements JsonSerializable,Iterator
         $e->moveFile($this->fileStorageDir);
         $this->entries[$uuid] = $e;
         return $uuid;
+    }
+
+//--new->
+    public function delete($uuid){
+        $entry = $this->getEntry($uuid);
+        if( null !== $entry){
+            $this->removeEntry($uuid);
+            return $this->deleteFile($entry->getFilePath());
+        }
+    }
+
+//--new->
+    public function removeEntry($uuid){
+        if( null !== $this->getEntry($uuid) ){
+            unset($this->entries[$uuid]);
+        }
+    }
+
+//--new->
+    public function deleteFile($filePath){
+        if( is_file($filePath) && $filePath !== $this->fileStorageDir . self::MANIFEST_FILENAME)
+        $deleted = unlink($filePath);
+        return $deleted;
     }
 
     public function jsonSerialize(){
