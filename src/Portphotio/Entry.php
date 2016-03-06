@@ -107,6 +107,7 @@ class Entry implements JsonSerializable
     public function moveFile($dir){
         $newFilePath = $dir .'/'. $this->uuid;
         if(copy($this->filePath, $newFilePath)){
+            chmod($newFilePath, 0664);
             $this->filePath = $newFilePath;
             return true;
         }
