@@ -69,11 +69,11 @@ class Manifest implements JsonSerializable,Iterator
     }
 
     public function jsonSerialize(){
-        return $this->entries;
+        return $this->toArray();
     }
 
     public function toArray(){
-        return $this->entries;
+        return array_values($this->entries);
     }
 
     public function key(){
