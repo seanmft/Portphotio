@@ -91,7 +91,7 @@ class ManifestTest extends \PHPUnit_Framework_TestCase
         $uuid = $m->saveFile($this->files[5], $this->fileNames[5]);
 
         $expectedArray = [
-            $expectedUuid => [
+            [
                 'uuid' => $expectedUuid,
                 'name' => $this->fileNames[5],
                 'href' => $this->baseUrl .'/'. $expectedUuid,
