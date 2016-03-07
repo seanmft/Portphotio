@@ -85,10 +85,13 @@ class EntryTest extends \PHPUnit_Framework_TestCase
     }
 
     public static function tearDownAfterClass(){
-        $fi = new \FilesystemIterator(realpath('tests/fixtures/img'));
-        foreach($fi as $finfo){
-            if($finfo->isFile()){
-                unlink($finfo->getPathName());
+        $realpath = realpath('tests/fixtures/img');
+        if($realpath){
+            $fi = new \FilesystemIterator(realpath('tests/fixtures/img'));
+            foreach($fi as $finfo){
+                if($finfo->isFile()){
+                    unlink($finfo->getPathName());
+                }
             }
         }
     }
