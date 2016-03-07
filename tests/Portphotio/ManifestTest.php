@@ -20,7 +20,7 @@ class ManifestTest extends \PHPUnit_Framework_TestCase
                 $this->fileNames[] = $finfo->getFileName();
             }
         }
-
+        sort($this->fileNames);
         $this->baseUrl = 'http://www.fakeurl.com';
         $this->fileStorageDir = $this->fixturesPath . '/img';
     }
@@ -95,6 +95,9 @@ class ManifestTest extends \PHPUnit_Framework_TestCase
                 'uuid' => $expectedUuid,
                 'name' => $this->fileNames[5],
                 'href' => $this->baseUrl .'/'. $expectedUuid,
+                'orientation' => 'portrait',
+                'nativeWidth' => 317,
+                'nativeHeight' => 398,
                 'attrs' => []
             ]
         ];

@@ -20,10 +20,15 @@ class Entry implements JsonSerializable
         $this->filePath = $this->_errorCheckFilePath($filePath);
         $this->baseUrl = $this->_errorCheckBaseUrl($baseUrl);
         $this->uuid = $this->_makeUUID($filePath);
+        list($width, $height) = $this->_getWidthAndHeight($filePath);
+        $orientation = $this->_getOrientation($width, $height);
 
         $this->values = [
             'uuid' => $this->uuid,
             'name' => $this->uuid,
+            'orientation' => $orientation,
+            'nativeWidth' => $width,
+            'nativeHeight' => $height,
             'href' => $this->baseUrl .'/'. $this->uuid,
             'attrs' => []
         ];
@@ -90,6 +95,7 @@ class Entry implements JsonSerializable
         if( isset($this->values[$name]) ){
             return $this->values[$name];
         }
+        return null;
     }
 
     public function getUUID(){
@@ -142,5 +148,27 @@ class Entry implements JsonSerializable
             throw new RuntimeException('file '.$filePath.' is not readable');
         }
         return $filePath;
+    }
+    
+    protected function _getWidthAndHeight($filePath){
+        $img = Image::make($filePath);
+        $height = $img->height();
+        $width = $img->width();
+        return [$width, $height];
+    }
+
+    protected function _getOrientation($width, $height){
+        $proportion = $width/$height;
+        $orientation;
+        if($proportion < 1){
+            $orientation = 'portrait';
+        }
+        elseif($proportion > 1){
+            $orientation = 'landscape';
+        }
+        else{
+            $orientation = 'square';
+        }
+        return $orientation;
     }
 }

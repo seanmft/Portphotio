@@ -60,18 +60,20 @@ class Manifest implements JsonSerializable,Iterator
 //--new->
     public function getEntries($propOrAttrName, $value = null){
         $entries = [];
-        $propOrAttrName = strtolower($propOrAttrName);
+        $lc_propOrAttrName = strtolower($propOrAttrName);
         $value = null===$value? $value : strtolower($value);
         foreach ($this->entries as $uuid => $entry) {
-            if(in_array($propOrAttrName, ['uuid','name','href'])){
-                if(strtolower($entry->getProperty($propOrAttrName)) == $value){
+            //match properties case sensitive
+            if( null !== $entry->getProperty($propOrAttrName) ){
+                if($entry->getProperty($propOrAttrName) == $value){
                     $entries[] = $entry;
                 }
                 elseif($value === null){
                     $entries[] = $entry;
                 }
             }
-            elseif($entry->issetAttribute($propOrAttrName)){
+            //match attributes case insensitive
+            elseif($entry->issetAttribute($lc_propOrAttrName)){
                 if(strtolower($entry->getAttribute($propOrAttrName)) == $value){
                     $entries[] = $entry;
                 }
