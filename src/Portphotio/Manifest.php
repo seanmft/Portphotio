@@ -129,7 +129,14 @@ class Manifest implements JsonSerializable,Iterator
     }
 
     public function toArray(){
-        return array_values($this->entries);
+        $entries = [];
+        foreach($this->entries as $uuid => $entry){
+            if($entry instanceof Entry){
+                $entry = $entry->toArray();
+            }
+            $entries[$uuid] = $entry;
+        }
+        return array_values($entries);
     }
 
     public function key(){
