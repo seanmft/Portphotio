@@ -22,11 +22,6 @@ class EntryTest extends \PHPUnit_Framework_TestCase
         $this->baseUrl = 'http://www.foo.com';
     }
 
-    protected function tearDown(){
-        $e = $this->testGoodConstruct();
-        $e = null;
-    }
-
     public function testGoodConstruct(){
         $e = new Entry($this->files[0], $this->baseUrl);
         $this->assertEquals(hash_file('fnv164', $this->files[0]), $e->getUUID());
@@ -89,7 +84,7 @@ class EntryTest extends \PHPUnit_Framework_TestCase
         if($realpath){
             $fi = new \FilesystemIterator(realpath('tests/fixtures/img'));
             foreach($fi as $finfo){
-                if($finfo->isFile()){
+                if($finfo->isFile() && '.gitkeep' !== $finfo->getFilename()){
                     unlink($finfo->getPathName());
                 }
             }

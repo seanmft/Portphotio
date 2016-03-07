@@ -133,7 +133,7 @@ class ManifestTest extends \PHPUnit_Framework_TestCase
     protected static function cleanUpFiles(){
         $fi = new \FilesystemIterator(realpath('tests/fixtures') .'/img');
         foreach($fi as $finfo){
-            if($finfo->isFile()){
+            if($finfo->isFile() && '.gitkeep' !== $finfo->getFilename()){
                 unlink($finfo->getPathName());
             }
         }
