@@ -14,10 +14,9 @@ class EntryTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp(){
         $this->fixturesPath = realpath('tests/fixtures');
-        foreach(new \FilesystemIterator($this->fixturesPath . '/test-files') as $finfo){
-            if($finfo->isFile()){
-                $this->files[] = $finfo->getPathName();
-            }
+        $this->fileData = json_decode(file_get_contents('tests/fixtures/test-files/test_image_data.json'), true);
+        foreach($this->fileData as $k => $obj){
+            $this->files[$k] = $this->fixturesPath . '/test-files/' . $k . '.jpg';
         }
         $this->baseDir = $this->fixturesPath . '/img';
         $this->baseUrl = 'http://www.foo.com';
