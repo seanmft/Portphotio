@@ -38,14 +38,14 @@ class Manifest implements JsonSerializable,Iterator
         $entries = [];
         if( is_file($manifestFile) && is_readable($manifestFile) ){
             $entriesArray = json_decode(file_get_contents($manifestFile), true);
-            foreach ($entriesArray as $uuid => $entryArray) {
-                $entries[$uuid] = $this->_mapEntryArrayToEntryClass($entryArray);
-            }
+            $entries = $entriesArray;
         }
         return $entries;
     }
 
-    protected function _mapEntryArrayToEntryClass(array $entryArray){
+    protected function _mapEntryArrayToEntryClass($entryArray){
+        if($entryArray instanceof Entry)return $entryArray;
+        if(false===$entryArray)return false;
         $entryFilePath = $this->fileStorageDir .'/'. $entryArray['uuid'];
         $entry = new Entry($entryFilePath, $this->baseUrl);
         $entry->setName($entryArray['name']);
@@ -54,7 +54,11 @@ class Manifest implements JsonSerializable,Iterator
     }
 
     public function getEntry($uuid){
-        return (isset($this->entries[$uuid]))? $this->entries[$uuid] : null;
+        if(isset($this->entries[$uuid])){
+            $entry = $this->_mapEntryArrayToEntryClass($this->entries[$uuid]);
+            return $entry;
+        }
+        return null;
     }
 
 //--new->
@@ -63,6 +67,7 @@ class Manifest implements JsonSerializable,Iterator
         $lc_propOrAttrName = strtolower($propOrAttrName);
         $value = null===$value? $value : strtolower($value);
         foreach ($this->entries as $uuid => $entry) {
+            $entry = $this->_mapEntryArrayToEntryClass($entry);
             //match properties case sensitive
             if( null !== $entry->getProperty($propOrAttrName) ){
                 if($entry->getProperty($propOrAttrName) == $value){
@@ -131,13 +136,13 @@ class Manifest implements JsonSerializable,Iterator
         return key($this->entries);
     }
     public function current(){
-        return current($this->entries);
+        return $this->_mapEntryArrayToEntryClass(current($this->entries));
     }
     public function valid(){
         return isset($this->entries[key($this->entries)]);
     }
     public function next(){
-        return next($this->entries);
+        return $this->_mapEntryArrayToEntryClass(next($this->entries));
     }
     public function rewind(){
         return reset($this->entries);
