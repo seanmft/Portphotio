@@ -149,7 +149,7 @@ class Entry implements JsonSerializable
         }
         return $filePath;
     }
-    
+
     protected function _getWidthAndHeight($filePath){
         $img = Image::make($filePath);
         $height = $img->height();
@@ -159,7 +159,7 @@ class Entry implements JsonSerializable
 
     protected function _getOrientation($width, $height){
         $proportion = $width/$height;
-        $orientation;
+        $orientation = '';
         if($proportion < 1){
             $orientation = 'portrait';
         }
