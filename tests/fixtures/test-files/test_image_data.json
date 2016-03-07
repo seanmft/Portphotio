@@ -1,0 +1,47 @@
+{
+    "0" : {
+        "width" : 640,
+        "height" : 506,
+        "orientation" : "landscape"
+    },
+    "1" : {
+        "width" : 411,
+        "height" : 512,
+        "orientation" : "portrait"
+    },
+    "2" : {
+        "width" : 800,
+        "height" : 484,
+        "orientation" : "landscape"
+    },
+    "3" : {
+        "width" : 1024,
+        "height" : 768,
+        "orientation" : "landscape"
+    },
+    "4" : {
+        "width" : 619,
+        "height" : 571,
+        "orientation" : "landscape"
+    },
+    "5" : {
+        "width" : 800,
+        "height" : 757,
+        "orientation" : "landscape"
+    },
+    "6" : {
+        "width" : 1024,
+        "height" : 680,
+        "orientation" : "landscape"
+    },
+    "7" : {
+        "width" : 317,
+        "height" : 398,
+        "orientation" : "portrait"
+    },
+    "8" : {
+        "width" : 800,
+        "height" : 800,
+        "orientation" : "square"
+    }
+}

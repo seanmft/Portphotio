@@ -14,13 +14,11 @@ class ManifestTest extends \PHPUnit_Framework_TestCase
     protected function setUp(){
         self::cleanUpFiles();
         $this->fixturesPath = realpath('tests/fixtures');
-        foreach(new \FilesystemIterator($this->fixturesPath .'/test-files') as $finfo){
-            if($finfo->isFile()){
-                $this->files[] = $finfo->getPathName();
-                $this->fileNames[] = $finfo->getFileName();
-            }
+        $this->fileData = json_decode(file_get_contents('tests/fixtures/test-files/test_image_data.json'), true);
+        foreach($this->fileData as $k => $obj){
+            $this->files[$k] = $this->fixturesPath . '/test-files/' . $k . '.jpg';
+            $this->fileNames[$k] = $k . '.jpg';
         }
-        sort($this->fileNames);
         $this->baseUrl = 'http://www.fakeurl.com';
         $this->fileStorageDir = $this->fixturesPath . '/img';
     }
@@ -95,9 +93,9 @@ class ManifestTest extends \PHPUnit_Framework_TestCase
                 'uuid' => $expectedUuid,
                 'name' => $this->fileNames[5],
                 'href' => $this->baseUrl .'/'. $expectedUuid,
-                'orientation' => 'portrait',
-                'nativeWidth' => 317,
-                'nativeHeight' => 398,
+                'orientation' => $this->fileData[5]['orientation'],
+                'nativeWidth' => $this->fileData[5]['width'],
+                'nativeHeight' => $this->fileData[5]['height'],
                 'attrs' => []
             ]
         ];
