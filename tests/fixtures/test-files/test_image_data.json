@@ -1,47 +1,65 @@
 {
     "0" : {
-        "width" : 640,
-        "height" : 506,
-        "orientation" : "landscape"
+        "nativeWidth" : 640,
+        "nativeHeight" : 506,
+        "orientation" : "landscape",
+        "name" : "0.jpg",
+        "uuid" : "946188ea27988566"
     },
     "1" : {
-        "width" : 411,
-        "height" : 512,
-        "orientation" : "portrait"
+        "nativeWidth" : 411,
+        "nativeHeight" : 512,
+        "orientation" : "portrait",
+        "name" : "1.jpg",
+        "uuid" : "39706f0d66422d4f"
     },
     "2" : {
-        "width" : 800,
-        "height" : 484,
-        "orientation" : "landscape"
+        "nativeWidth" : 800,
+        "nativeHeight" : 484,
+        "orientation" : "landscape",
+        "name" : "2.jpg",
+        "uuid" : "f27daa1d9f8e5043"
     },
     "3" : {
-        "width" : 1024,
-        "height" : 768,
-        "orientation" : "landscape"
+        "nativeWidth" : 1024,
+        "nativeHeight" : 768,
+        "orientation" : "landscape",
+        "name" : "3.jpg",
+        "uuid" : "f7ac4a993105cc28"
     },
     "4" : {
-        "width" : 619,
-        "height" : 571,
-        "orientation" : "landscape"
+        "nativeWidth" : 619,
+        "nativeHeight" : 571,
+        "orientation" : "landscape",
+        "name" : "4.jpg",
+        "uuid" : "9ea29d45fc783727"
     },
     "5" : {
-        "width" : 800,
-        "height" : 757,
-        "orientation" : "landscape"
+        "nativeWidth" : 800,
+        "nativeHeight" : 757,
+        "orientation" : "landscape",
+        "name" : "5.jpg",
+        "uuid" : "cc90da755d8272e7"
     },
     "6" : {
-        "width" : 1024,
-        "height" : 680,
-        "orientation" : "landscape"
+        "nativeWidth" : 1024,
+        "nativeHeight" : 680,
+        "orientation" : "landscape",
+        "name" : "6.jpg",
+        "uuid" : "bfb33f1cb9e71b35"
     },
     "7" : {
-        "width" : 317,
-        "height" : 398,
-        "orientation" : "portrait"
+        "nativeWidth" : 317,
+        "nativeHeight" : 398,
+        "orientation" : "portrait",
+        "name" : "7.jpg",
+        "uuid" : "0412fca6c52c9b8d"
     },
     "8" : {
-        "width" : 800,
-        "height" : 800,
-        "orientation" : "square"
+        "nativeWidth" : 800,
+        "nativeHeight" : 800,
+        "orientation" : "square",
+        "name" : "8.jpg",
+        "uuid" : "0ef9bd4155131405"
     }
 }

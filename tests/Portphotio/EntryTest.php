@@ -1,94 +1,115 @@
 <?php
 namespace Portphotio;
 
+require_once 'CaseTemplate.php';
+
 use Intervention\Image\ImageManagerStatic;
 
-class EntryTest extends \PHPUnit_Framework_TestCase
+class EntryTest extends CaseTemplate
 {
 
     protected
         $fixturesPath,
-        $files,
-        $baseDir,
+        $photos,
+        $photoStorageDir,
+        $manifestPath,
         $baseUrl;
 
     protected function setUp(){
-        $this->fixturesPath = realpath('tests/fixtures');
-        $this->fileData = json_decode(file_get_contents('tests/fixtures/test-files/test_image_data.json'), true);
-        foreach($this->fileData as $k => $obj){
-            $this->files[$k] = $this->fixturesPath . '/test-files/' . $k . '.jpg';
-        }
-        $this->baseDir = $this->fixturesPath . '/img';
-        $this->baseUrl = 'http://www.foo.com';
+        $this->beforeEach();
     }
 
-    public function testGoodConstruct(){
-        $e = new Entry($this->files[0], $this->baseUrl);
-        $this->assertEquals(hash_file('fnv164', $this->files[0]), $e->getUUID());
-        $this->assertEquals($this->files[0], $e->getFilePath());
+    public function testGoodConstruct($fileNum=0){
+        $fileData = $this->fileData[$fileNum];
+        $e = new Entry($this->photos[$fileNum], $this->baseUrl);
+        $this->assertFileNotExists($this->manifestPath);
+        $this->assertEquals($fileData['uuid'], $e->getUuid());
+        $this->assertEquals($fileData['nativeWidth'], $e->getWidth());
+        $this->assertEquals($fileData['nativeHeight'], $e->getHeight());
+        $this->assertEquals($fileData['orientation'], $e->getOrientation());
+        $this->assertEquals($this->baseUrl .'/'. $fileData['uuid'], $e->getHref());
         return $e;
     }
 
-    public function testGetImage(){
-        $e = new Entry($this->files[0], $this->baseUrl);
-        $this->assertInstanceOf('Intervention\Image\Image', $e->getImage() );
+    public function testSetName($fileNum=1){
+        $e = $this->testGoodConstruct($fileNum);
+        $e->setName($this->fileData[$fileNum]['name']);
+        $this->assertEquals($this->fileData[$fileNum]['name'], $e->getName());
+        return $e;
     }
 
-    public function testMoveFile(){
-        $e = new Entry($this->files[0], $this->baseUrl);
-        $e->moveFile($this->baseDir);
-        $this->assertFileExists($e->getFilePath());
+    public function testSetAttribute($fileNum=2, $attrName='foo', $attrVal='bar'){
+        $fileData = $this->fileData[$fileNum];
+        $e = $this->testGoodConstruct($fileNum);
+        $e->setAttribute($attrName, $attrVal);
+        $this->assertTrue($e->issetAttribute($attrName));
+        $this->assertEquals($attrVal, $e->getAttribute($attrName));
+        return $e;
     }
 
-    public function testSettingNameAndAttributes(){
-        $e = new Entry($this->files[0], $this->baseUrl);
-        $name = 'fooey foo foo';
-        $photographer = 'sammy jackson';
-        $e->setName($name);
-        $e->setAttribute('photographer', $photographer);
-
+    public function testBootstrap($fileNum=3){
+        $attr = [ 'some-attr-name' => 'Some Attribute Value'];
+        $fileData = $this->fileData[$fileNum];
+        $e = $this->testSetAttribute($fileNum, key($attr), $attr[key($attr)] );
         $array = $e->toArray();
-        $this->assertEquals($array['name'], $name);
-        $this->assertEquals($array['attrs']['photographer'], $photographer, 'attr values arent set as expected');
-        $this->assertJsonStringEqualsJsonString(json_encode($array), json_encode($e), 'jsonSerialize is broken');
+        $e2 = Entry::bootstrap($array, $this->photos[$fileNum], $this->baseUrl);
+        $this->assertEquals($e, $e2);
     }
 
-    public function testSetBadAttributeNameWithSpace(){
-        $e = new Entry($this->files[0], $this->baseUrl);
-        $e->setAttribute(' the client ', 'With Space');
-        $this->assertEquals($e->getAttribute('the-client'), 'With Space');
+    public function testPersistsOnDestruct($fileNum=4){
+        $attr = [ 'some-attr-name' => 'Some Attribute Value'];
+        $fileData = $this->fileData[$fileNum];
+
+        $e = $this->testSetAttribute($fileNum, key($attr), $attr[key($attr)] );
+        $uuid = $e->getUuid();
+        $entryArray1 = $e->toArray();
+        $e = null;
+
+        //bootstrapping from file and bootstrapping from the $e->toArray() should be the same
+        $entryArray2 = Register::get()[$uuid];
+        $e1 = Entry::bootstrap($entryArray1, $this->photos[$fileNum], $this->baseUrl);
+        $e2 = Entry::bootstrap($entryArray2, $this->photos[$fileNum], $this->baseUrl);
+        $this->assertEquals($e1, $e2);
+        return $e1;
     }
 
-    public function testSetBadAttributeNameWithUnderscore(){
-        $e = new Entry($this->files[0], $this->baseUrl);
-        $e->setAttribute('the_client', 'With Underscore _');
-        $this->assertEquals($e->getAttribute('the-client'), 'With Underscore _');
+    public function testDelete($fileNum=5){
+        $e = $this->testGoodConstruct($fileNum);
+        $filePath = $e->getFilePath();
+        $uuid = $e->getUuid();
+
+        //entry hasn't been moved so it should only be unregistered, and shouldn't delete the original (hopefully!!! since we need these);
+        $e->delete();
+        $this->assertFileExists($filePath);
+        $this->assertNull($e->getFilePath());
+        $this->assertFalse(isset(Register::get()[$uuid]));
+
+        $e = $this->testGoodConstruct($fileNum);
+        $e->moveFile($this->photoStorageDir);
+        $this->assertFileExists($this->photoStorageDir .'/'. $uuid);
+
+        //should actually delete the new file
+        $e->delete();
+        $this->assertFileNotExists($this->photoStorageDir .'/'. $uuid);//no file
+        $this->assertNull($e->getFilePath());//all properties should be null
+
+        //should not be set before or after Register::write()
+        $this->assertFalse(isset(Register::get()[$uuid]));
+        Register::write();
+        $this->assertFalse(isset(Register::get()[$uuid]));
+
     }
 
-    public function testSetBadAttributeNameWithUppercase(){
-        $e = new Entry($this->files[0], $this->baseUrl);
-        $e->setAttribute('The Client', 'WITH UPPERCASE');
-        $this->assertEquals($e->getAttribute('the-client'), 'WITH UPPERCASE');
-    }
-
-    /**
-     * @expectedException RuntimeException
-     */
-    public function testSetBadAttributeBadCharThrows(){
-        $e = new Entry($this->files[0], $this->baseUrl);
-        $e->setAttribute('The@client', 'wont be set');
-    }
-
-    public static function tearDownAfterClass(){
-        $realpath = realpath('tests/fixtures/img');
-        if($realpath){
-            $fi = new \FilesystemIterator(realpath('tests/fixtures/img'));
-            foreach($fi as $finfo){
-                if($finfo->isFile() && '.gitkeep' !== $finfo->getFilename()){
-                    unlink($finfo->getPathName());
-                }
-            }
+    public function beforeEach(){
+        self::cleanUpFiles();
+        $this->fixturesPath = realpath('tests/fixtures');
+        $this->fileData = json_decode(file_get_contents('tests/fixtures/test-files/test_image_data.json'), true);
+        foreach($this->fileData as $k => $obj){
+            $this->photos[$k] = $this->fixturesPath . '/test-files/' . $k . '.jpg';
         }
+        $this->photoStorageDir = $this->fixturesPath . '/img';
+        $this->manifestPath = $this->photoStorageDir . '/manifest.json';
+        Register::$filePath = $this->manifestPath;
+        $this->baseUrl = 'http://www.foo.com';
     }
-
 }
