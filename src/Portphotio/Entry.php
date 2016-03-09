@@ -181,7 +181,7 @@ class Entry extends ManifestSystem
         $reflect = new \ReflectionClass(__CLASS__);
         $consts = $reflect->getConstants();
         unset($consts['HASH_ALGORITHM']);
-        if( !empty(array_diff($consts, array_keys($entry))) ){
+        if( 0 !== count(array_diff($consts, array_keys($entry))) ){
             throw new RuntimeException('faulty Entry array, cannot bootstrap.');
         }
         if( $entry['uuid'] !== self::makeUUID($filePath) ){
