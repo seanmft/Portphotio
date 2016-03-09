@@ -5,6 +5,10 @@ namespace Portphotio;
 class CaseTemplate extends \PHPUnit_Framework_TestCase
 {
     public static function tearDownAfterClass(){
+        self::unregisterAllAndDeleteFiles();
+    }
+
+    public static function unregisterAllAndDeleteFiles(){
         $register = Register::get();
         foreach($register as $uuid => $e){
             $e = null;

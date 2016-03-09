@@ -66,6 +66,7 @@ class Entry extends ManifestSystem
 
     public function setName($name){
         $this->values['name'] = $name;
+        Register::register($this);
     }
 
     public function setAttribute($name, $value){
@@ -77,6 +78,7 @@ class Entry extends ManifestSystem
         else{
             $this->values[self::ATTRIBUTE][$name] = $value;
         }
+        Register::register($this);
     }
 
     public function isValidAttribute($attribute){
@@ -151,6 +153,7 @@ class Entry extends ManifestSystem
             return true;
         }
         return false;
+        Register::register($this);
     }
 
     public function delete(){

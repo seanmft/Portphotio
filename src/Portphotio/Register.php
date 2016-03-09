@@ -15,6 +15,7 @@ class Register
 {
     public static $filePath = null;
     protected $entries = [];
+    protected $Manifest = null;
     private static $instance = null;
 
     protected function __construct(){
@@ -35,8 +36,18 @@ class Register
         return self::$instance;
     }
 
+    public static function subscribe(Manifest$Manifest){
+        self::Instance()->Manifest = $Manifest;
+    }
+
     public static function register(Entry$Entry){
-        self::Instance()->entries[$Entry->getUuid()] = $Entry->toArray();
+        $uuid = $Entry->getUuid();
+        $entry = $Entry->toArray();
+        $Entry = null;
+        self::Instance()->entries[$uuid] = $entry;
+        if(self::Instance()->Manifest){
+            self::Instance()->Manifest->updateEntryStatus($uuid, $entry);
+        }
     }
 
     public static function unregister($uuid){

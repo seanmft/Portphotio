@@ -7,21 +7,29 @@ class Manifest extends ManifestSystem
     protected
         $fileStorageDir,
         $manifestPath,
-        $baseUrl;
+        $baseUrl,
+        $entries;
 
     public function __construct($fileStorageDir, $baseUrl){
         //register manifest; let Register check the path
         $this->fileStorageDir = $fileStorageDir;
         Register::$filePath = $this->manifestPath = $this->fileStorageDir . '/' . self::MANIFEST_FILENAME;
+        //calls $this->updateEntryStatus()
+        Register::subscribe($this);
+        $this->entries = Register::get();
         $this->baseUrl = $this->_errorCheckUrl($baseUrl);
     }
 
+    public function updateEntryStatus($uuid, $entry){
+        $this->entries[$uuid] = $entry;
+    }
+
     public function count(){
-        return count(Register::get());
+        return count($this->entries);
     }
 
     public function getEntry($uuid){
-        $entries = Register::get();
+        $entries = $this->entries;
         if(isset($entries[$uuid])){
             $entry = $this->_makeBootstrapEntry($entries[$uuid]);
             return $entry;
@@ -30,7 +38,7 @@ class Manifest extends ManifestSystem
     }
 
     public function saveFile($filePath, $fileName = null){
-        $entries = Register::get();
+        $entries = $this->entries;
         $uuid = Entry::makeUUID($filePath);
         if( isset($entries[$uuid]) ){
             return $uuid;
@@ -44,12 +52,12 @@ class Manifest extends ManifestSystem
     }
 
     public function toArray(){
-        return array_values(Register::get());
+        return array_values($this->entries);
     }
 
     public function query($propOrAttrName = null, $value = null){
         $result = [];
-        $entries = Register::get();
+        $entries = $this->entries;
         if($propOrAttrName == null){
             $result = $entries;
         }
