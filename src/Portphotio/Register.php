@@ -65,6 +65,7 @@ class Register
     public function __destruct(){
         $jsonString = json_encode($this->entries);
         file_put_contents(self::$filePath, $jsonString);
+        chmod(self::$filePath, 0664);
     }
 
     private function _errorCheckFileDestination($filePath){
@@ -88,7 +89,7 @@ class Register
         }
         $realPath = $dir.'/'.$pp['basename'];
         if( $realPath && is_file($realPath)  && !is_writable($realPath)){
-            throw new RuntimeException('the filePath `'.$filepath.'` resolves to the file `'.$realPath.'`, which is not writeable; check permissions');
+            throw new RuntimeException('the filePath `'.$filePath.'` resolves to the file `'.$realPath.'`, which is not writeable; check permissions');
         }
 
         return $realPath;
