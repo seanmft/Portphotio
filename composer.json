@@ -13,8 +13,7 @@
     "require": {
         "php": ">=5.4.0",
         "ext-gd": "*",
-        "intervention/image" : "*",
-        "intervention/imagecache" : "*"
+        "intervention/image" : "*"
     },
     "autoload": {
         "psr-0": {
