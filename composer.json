@@ -1,6 +1,6 @@
 {
     "name": "sean/portphotio",
-    "description": "lightweight library for handling small photo collections with json.",
+    "description": "library for handling small photo collections with json",
     "type": "library",
     "license": "MIT",
     "authors": [
