@@ -45,6 +45,25 @@ class Manifest extends ManifestSystem
         return false;
     }
 
+    public function getUniqueAttributes(){
+        $attrNames = [];
+        foreach($this->entries as $uuid => $e){
+            $attrs = $e['attrs'];
+            $attrNames = array_merge($attrNames, array_keys($attrs) );
+        }
+        return array_unique($attrNames);
+    }
+
+    public function getUniqueAttributeValues($name){
+        $attrVals = [];
+        foreach ($this->entries as $uuid => $e) {
+            if( isset($e['attrs'][$name]) ){
+                $attrVals[] = $e['attrs'][$name];
+            }
+        }
+        return array_unique($attrVals);
+    }
+
     public function saveFile($filePath, $fileName = null){
         $entries = $this->entries;
         $uuid = Entry::makeUUID($filePath);
