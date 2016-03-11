@@ -1,1 +1,11 @@
-{"f27daa1d9f8e5043":{"uuid":"f27daa1d9f8e5043","name":"f27daa1d9f8e5043","orientation":"landscape","nativeWidth":800,"nativeHeight":484,"href":"http:\/\/www.foo.com\/f27daa1d9f8e5043","attrs":{"foo":"bar"}}}
+{
+    "946188ea27988566": {
+        "uuid": "946188ea27988566",
+        "name": "946188ea27988566",
+        "orientation": "landscape",
+        "nativeWidth": 640,
+        "nativeHeight": 506,
+        "href": "http://www.foo.com/946188ea27988566",
+        "attrs": []
+    }
+}

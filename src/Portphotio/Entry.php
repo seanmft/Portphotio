@@ -136,14 +136,6 @@ class Entry extends ManifestSystem
         return null;
     }
 
-    public function getAttributeKeys(){
-        return array_keys($this->values[self::ATTRIBUTE]);
-    }
-
-    public function getPropertyKeys(){
-        return array_keys($this->values);
-    }
-
     public function getImage(){
         return Image::make($this->filePath);
     }

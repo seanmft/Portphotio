@@ -22,10 +22,8 @@ class Register
         $filePath = self::$filePath = $this->_errorCheckFileDestination(self::$filePath);
         //first run; no file exists yet
         $contents = is_file($filePath)? file_get_contents($filePath) : '{}';
-        $jsonArray = json_decode($contents, true);
-        if( !is_array($jsonArray) ){
-            throw new RuntimeException('contents of $filePath file `'.$filePath.'` could not be json_decoded ');
-        }
+        //always return an array
+        $jsonArray = json_decode($contents, true)?: [];
         $this->entries = $jsonArray;
     }
 
@@ -63,9 +61,11 @@ class Register
     }
 
     public function __destruct(){
-        $jsonString = json_encode($this->entries);
-        file_put_contents(self::$filePath, $jsonString);
-        chmod(self::$filePath, 0664);
+        if(is_array(self::Instance()->entries)){
+            $jsonString = json_encode($this->entries, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
+            file_put_contents(self::$filePath, $jsonString, LOCK_EX);
+            chmod(self::$filePath, 0664);
+        }
     }
 
     private function _errorCheckFileDestination($filePath){

@@ -37,6 +37,14 @@ class Manifest extends ManifestSystem
         return null;
     }
 
+    public function getFile($uuid){
+        $file = $this->fileStorageDir . '/' . trim($uuid);
+        if(is_file($file) && is_readable($file)){
+            return $file;
+        }
+        return false;
+    }
+
     public function saveFile($filePath, $fileName = null){
         $entries = $this->entries;
         $uuid = Entry::makeUUID($filePath);
